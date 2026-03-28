@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Seleccionamos los botones por su ID (los que tú creaste)
     const btnLista = document.getElementById('tab-lista');
     const btnRegistro = document.getElementById('tab-registro');
-    const btnNuevoTop = document.getElementById('btn-top-nuevo'); // El botón dorado de arriba
+    const btnNuevoTop = document.querySelector('.nueva-orden'); // El botón dorado de arriba
 
     // 3. Seleccionamos las secciones de contenido
     const sectionLista = document.getElementById('section-lista');
