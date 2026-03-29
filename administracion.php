@@ -6,11 +6,36 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
+if (!isset($_SESSION['usuario']) || 
+   ($_SESSION['usuario']['rol'] !== 'admin' && $_SESSION['usuario']['rol'] !== 'superadmin')) {
+
+    header("Location: index.php");
+    exit();
+}
+
 include("funciones/bd.php");
 
 // Consulta usuarios
-$query = "SELECT id, nombre, rol FROM usuarios";
-$resultado = mysqli_query($conexionBd, $query);
+$busqueda = "";
+
+if (isset($_GET['buscar'])) {
+    $busqueda = $_GET['buscar'];
+
+    $stmt = mysqli_prepare($conexionBd, 
+        "SELECT id, nombre, rol FROM usuarios 
+         WHERE nombre LIKE ? OR rol LIKE ?"
+    );
+
+    $like = "%" . $busqueda . "%";
+
+    mysqli_stmt_bind_param($stmt, "ss", $like, $like);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+
+} else {
+    $query = "SELECT id, nombre, rol FROM usuarios";
+    $resultado = mysqli_query($conexionBd, $query);
+}
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +89,6 @@ $resultado = mysqli_query($conexionBd, $query);
     <main class="page-grid">
         <div class="main-card">
 
-            <!-- SOLO UNA PESTAÑA -->
             <div class="tabs-container">
                 <button class="tab-link active">LISTA DE USUARIOS</button>
             </div>
@@ -73,10 +97,15 @@ $resultado = mysqli_query($conexionBd, $query);
 
             <section class="tab-content active">
 
-                <div class="search-bar">
-                    <input type="text" placeholder="Buscar por usuario o rol...">
-                    <button type="button" class="btn-buscar">BUSCAR</button>
-                </div>
+                <form method="GET" class="search-bar">
+                    <input 
+                        type="text" 
+                        name="buscar"
+                        placeholder="Buscar por usuario o rol..."
+                        value="<?php echo htmlspecialchars($busqueda); ?>"
+                    >
+                    <button type="submit" class="btn-buscar">BUSCAR</button>
+                </form>
 
                 <table class="main-table">
                     <thead>
@@ -93,13 +122,23 @@ $resultado = mysqli_query($conexionBd, $query);
                             <td><?php echo $fila['nombre']; ?></td>
                             <td><?php echo ucfirst($fila['rol']); ?></td>
                             <td class="acciones-cell">
+
+                                <!-- EDITAR -->
                                 <a class="btn-action edit" href="editarusuario.php?id=<?php echo $fila['id']; ?>">
                                     Editar
                                 </a>
 
-                                <a class="btn-action delete" href="eliminarusuario.php?id=<?php echo $fila['id']; ?>">
+                                <!-- ELIMINAR (OCULTO PARA SUPERADMIN) -->
+                                <?php if($fila['rol'] !== 'superadmin'): ?>
+                                <a 
+                                    class="btn-action delete btn-eliminar" 
+                                    href="eliminarusuario.php?id=<?php echo $fila['id']; ?>"
+                                    data-nombre="<?php echo $fila['nombre']; ?>"
+                                >
                                     Eliminar
                                 </a>
+                                <?php endif; ?>
+
                             </td>
                         </tr>
                         <?php endwhile; ?>
@@ -111,6 +150,9 @@ $resultado = mysqli_query($conexionBd, $query);
 
         </div>
     </main>
+
+    <!-- JS AL FINAL (MEJOR PRÁCTICA) -->
+    <script src="js/administracion.js"></script>
 
 </body>
 </html>
