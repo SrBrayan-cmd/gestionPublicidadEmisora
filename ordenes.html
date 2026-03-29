@@ -45,13 +45,13 @@
             <div class="tabs-container">
                 <button class="tab-link active" id="tab-lista">LISTA DE ÓRDENES</button>
                 <button class="tab-link" id="tab-registro">NUEVA ORDEN</button>
-                <button class="tab-link active" id="tab-lista">GENERAR FACTURA</button>
-                <button class="tab-link" id="tab-registro">GENERAR CERTIFICACION</button>
+                <button class="tab-link" id="tab-factura">GENERAR FACTURA</button>
+                <button class="tab-link" id="tab-certificacion">GENERAR CERTIFICACION</button>
             </div>
 
             <hr class="tab-separator">
 
-            <section id="lista" class="tab-content">
+            <section id="lista" class="tab-content active">
 
                 <div class="search-bar">
                     <input type="text" placeholder="Buscar por número, cliente o producto..." id="busqueda">
@@ -131,7 +131,8 @@
                 </table>
             </section>
 
-            <section id="registro" class="tab-content" style="display:none">
+            <section id="registro" class="tab-content">
+
                 <div class="registro-clientes-tex">
                     <div class="titulo-clientes-registro">
                         <h1>Orden de Publicidad</h1>
@@ -224,7 +225,6 @@
                     <button type="submit" class="btn-save">GUARDAR CLIENTE</button>
                     <button class="btn-limpiar">LIMPIAR</button>
                 </form>
-            </section>
             </section>
         </div>
     </main>

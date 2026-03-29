@@ -4,15 +4,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const sectionLista = document.getElementById('lista');
     const sectionRegistro = document.getElementById('registro');
 
+    function inicializarVista() {
+        if (!btnLista || !btnRegistro || !sectionLista || !sectionRegistro) return;
+
+        sectionLista.classList.add('active');
+        sectionRegistro.classList.remove('active');
+        btnLista.classList.add('active');
+        btnRegistro.classList.remove('active');
+    }
+
     function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
         if (!seccionAMostrar || !seccionAOcultar || !botonActivo || !botonInactivo) return;
-        seccionAOcultar.style.display = 'none';
-        seccionAMostrar.style.display = 'block';
+        seccionAOcultar.classList.remove('active');
+        seccionAMostrar.classList.add('active');
         botonActivo.classList.add('active');
         botonInactivo.classList.remove('active');
     }
 
     if (btnLista && btnRegistro && sectionLista && sectionRegistro) {
+        inicializarVista();
+
         btnLista.addEventListener('click', () => {
             cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
         });
