@@ -1,181 +1,169 @@
-// Esperamos a que el HTML cargue completo.
+// Esperamos a que el HTML esté listo para manipular el formulario y la vista previa.
 document.addEventListener('DOMContentLoaded', function () {
-    // Input del correo de destino.
+    // Guardamos el input donde va el correo destino.
     var inputCorreo = document.getElementById('confirm-correo');
-
-    // Input del asunto.
+    // Guardamos el input del asunto.
     var inputAsunto = document.getElementById('confirm-asunto');
-
-    // Input del mensaje.
+    // Guardamos el textarea del mensaje.
     var inputMensaje = document.getElementById('confirm-mensaje');
 
-    // Elementos de vista previa.
+    // Guardamos los elementos que muestran la vista previa del correo.
     var previewCorreo = document.getElementById('preview-correo');
     var previewAsunto = document.getElementById('preview-asunto');
     var previewMensaje = document.getElementById('preview-mensaje');
 
-    // Formulario principal.
+    // Guardamos el formulario principal de confirmación.
     var formConfirmacion = document.getElementById('form-confirmacion');
-
-    // Caja de mensajes de estado.
+    // Guardamos el bloque donde se muestran mensajes de estado.
     var statusConfirmacion = document.getElementById('confirmacion-status');
-
-    // Botón para guardar plantilla.
+    // Guardamos el botón para guardar plantilla (si existe).
     var btnGuardarPlantilla = document.getElementById('btn-guardar-plantilla');
-
-    // Botones de tokens (por ejemplo {cliente}, {fecha}, etc.).
+    // Guardamos todos los botones que insertan tokens.
     var tokenButtons = document.querySelectorAll('.token-btn');
 
-    // Muestra un estado visual en la caja de mensajes.
+    // Esta función pinta un estado visual con tipo y mensaje.
     function mostrarEstado(tipo, mensaje) {
-        // Si no existe la caja, salimos.
+        // Si no existe el bloque de estado, detenemos la función.
         if (!statusConfirmacion) {
             return;
         }
 
-        // Definimos las clases de estado.
+        // Definimos la clase final del contenedor de estado.
         statusConfirmacion.className = 'confirmacion-status show ' + tipo;
-
-        // Definimos el texto del estado.
+        // Mostramos el mensaje recibido.
         statusConfirmacion.textContent = mensaje;
     }
 
-    // Actualiza la vista previa del correo.
+    // Esta función sincroniza los textos de la vista previa.
     function actualizarVistaPrevia() {
-        // Actualizamos correo en vista previa.
+        // Si existen elementos, reflejamos el correo o texto por defecto.
         if (previewCorreo && inputCorreo) {
             previewCorreo.textContent = inputCorreo.value || 'sin-destinatario@correo.com';
         }
 
-        // Actualizamos asunto en vista previa.
+        // Si existen elementos, reflejamos el asunto o texto por defecto.
         if (previewAsunto && inputAsunto) {
             previewAsunto.textContent = inputAsunto.value || 'Sin asunto';
         }
 
-        // Actualizamos mensaje en vista previa.
+        // Si existen elementos, reflejamos el mensaje o texto por defecto.
         if (previewMensaje && inputMensaje) {
             previewMensaje.textContent = inputMensaje.value || 'Sin contenido';
         }
     }
 
-    // Inserta un token dentro del textarea en la posición del cursor.
+    // Esta función inserta un token en la posición actual del cursor.
     function insertarToken(token) {
-        // Si no existe el textarea, salimos.
+        // Si no existe el textarea, no podemos insertar nada.
         if (!inputMensaje) {
             return;
         }
 
-        // Posición inicial del cursor.
+        // Detectamos el inicio de selección/cursor o usamos el final del texto.
         var start = (typeof inputMensaje.selectionStart === 'number') ? inputMensaje.selectionStart : inputMensaje.value.length;
-
-        // Posición final del cursor.
+        // Detectamos el final de selección/cursor o usamos el final del texto.
         var end = (typeof inputMensaje.selectionEnd === 'number') ? inputMensaje.selectionEnd : inputMensaje.value.length;
 
-        // Texto antes de la selección.
+        // Tomamos la parte del texto antes del cursor.
         var before = inputMensaje.value.slice(0, start);
-
-        // Texto después de la selección.
+        // Tomamos la parte del texto después del cursor.
         var after = inputMensaje.value.slice(end);
 
-        // Si hace falta, agregamos salto de línea antes del token.
+        // Si corresponde, agregamos un salto de línea antes del token.
         var insertion = ((before && !before.endsWith('\n')) ? '\n' : '') + token;
 
-        // Construimos el nuevo valor completo.
+        // Construimos el nuevo contenido del textarea con el token insertado.
         inputMensaje.value = before + insertion + after;
-
-        // Regresamos el foco al textarea.
+        // Devolvemos foco al textarea para seguir escribiendo.
         inputMensaje.focus();
 
-        // Calculamos nueva posición del cursor.
+        // Calculamos nueva posición del cursor después de insertar.
         var newCursor = before.length + insertion.length;
-
-        // Dejamos el cursor al final de lo insertado.
+        // Ubicamos el cursor justo al final del token insertado.
         inputMensaje.setSelectionRange(newCursor, newCursor);
 
-        // Refrescamos vista previa.
+        // Actualizamos vista previa para reflejar el cambio.
         actualizarVistaPrevia();
     }
 
-    // Escuchamos cambios en el input de correo.
+    // Si existe input de correo, sincronizamos vista previa al escribir.
     if (inputCorreo) {
         inputCorreo.addEventListener('input', actualizarVistaPrevia);
     }
 
-    // Escuchamos cambios en el input de asunto.
+    // Si existe input de asunto, sincronizamos vista previa al escribir.
     if (inputAsunto) {
         inputAsunto.addEventListener('input', actualizarVistaPrevia);
     }
 
-    // Escuchamos cambios en el input de mensaje.
+    // Si existe textarea de mensaje, sincronizamos vista previa al escribir.
     if (inputMensaje) {
         inputMensaje.addEventListener('input', actualizarVistaPrevia);
     }
 
-    // Recorremos todos los botones de token.
+    // Recorremos cada botón de token para insertar texto en el mensaje.
     for (var i = 0; i < tokenButtons.length; i++) {
-        // Guardamos el botón actual.
+        // Guardamos el botón actual del ciclo.
         var button = tokenButtons[i];
 
-        // Agregamos evento click al botón actual.
+        // Al hacer clic en el botón, insertamos su token.
         button.addEventListener('click', function () {
             // Leemos el token desde data-token.
             var token = this.getAttribute('data-token');
 
-            // Si hay token, lo insertamos.
+            // Si el token existe, lo insertamos en el mensaje.
             if (token) {
                 insertarToken(token);
             }
         });
     }
 
-    // Escuchamos el envío del formulario.
+    // Si existe el formulario, controlamos su envío para validar front-end.
     if (formConfirmacion) {
         formConfirmacion.addEventListener('submit', function (event) {
-            // Evitamos recarga de página.
+            // Evitamos recarga para validar y mostrar mensajes.
             event.preventDefault();
 
-            // Validamos que exista correo de destino.
+            // Si no hay correo de destino, mostramos aviso y detenemos.
             if (!inputCorreo || !inputCorreo.value.trim()) {
                 mostrarEstado('info', 'Debes indicar el correo del cliente antes de enviar la confirmación.');
                 return;
             }
 
-            // Mostramos mensaje de éxito.
+            // Si pasa la validación básica, mostramos éxito.
             mostrarEstado('success', 'La confirmación quedó lista para envío al cliente.');
         });
     }
 
-    // Evento para guardar plantilla.
+    // Si existe botón de guardar plantilla, mostramos mensaje al pulsarlo.
     if (btnGuardarPlantilla) {
         btnGuardarPlantilla.addEventListener('click', function () {
-            // Mostramos mensaje informativo.
+            // Mostramos mensaje informativo al usuario.
             mostrarEstado('info', 'La plantilla del correo fue guardada correctamente.');
         });
     }
 
-    // Tomamos links del menú superior.
+    // Tomamos todos los enlaces del menú principal.
     var menuLinks = document.querySelectorAll('header nav ul li a');
-
-    // Obtenemos archivo actual de la URL.
+    // Obtenemos el nombre de la página actual desde la URL.
     var currentPath = window.location.pathname.split('/').pop();
 
-    // Recorremos cada link para activar el que corresponde.
+    // Recorremos cada enlace para activar visualmente el que corresponde.
     for (var j = 0; j < menuLinks.length; j++) {
-        // Link actual.
+        // Guardamos el enlace actual del ciclo.
         var link = menuLinks[j];
-
-        // Href del link actual.
+        // Leemos su href.
         var href = link.getAttribute('href');
 
-        // Si coincide con la página actual, lo marcamos activo.
+        // Si coincide con la URL actual, marcamos como activo.
         if (href === currentPath || (href === 'index.html' && currentPath === '')) {
             link.classList.add('active-link');
         } else {
-            // Si no coincide, quitamos activo.
+            // Si no coincide, removemos clase activa.
             link.classList.remove('active-link');
         }
     }
 
-    // Inicializamos la vista previa al cargar.
+    // Al finalizar la carga, inicializamos la vista previa con el estado actual.
     actualizarVistaPrevia();
 });
