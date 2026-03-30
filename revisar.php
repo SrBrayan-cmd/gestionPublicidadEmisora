@@ -41,6 +41,42 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styleAnuladas.css">
     <title>Revisar Orden <?= $orden['numero_orden'] ?></title>
+    <style>
+        /* Estilos específicos para el botón regresar */
+        .form-actions {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #2a3f5a;
+            text-align: center;
+        }
+        
+        .btn-regresar {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #2a3f5a;
+            color: #ffffff;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .btn-regresar:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #c9a84c;
+            color: #c9a84c;
+            transform: translateY(-2px);
+        }
+        
+        .btn-regresar:active {
+            transform: translateY(0);
+        }
+    </style>
+
 </head>
 <body>
 <header>
@@ -111,7 +147,7 @@ $stmt->close();
                 </div>
             </div>
             <div class="form-actions">
-                <a href="anuladas.php" class="btn-limpiar">Volver a Anuladas</a>
+                <a href="anuladas.php" class="btn-regresar">Volver a Anuladas</a>
             </div>
         </form>
     </div>
