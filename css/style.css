@@ -91,6 +91,13 @@ header .boton-salir button {
     font-size: 0.8rem;
 }
 
+header .boton-salir button a,
+header .boton-salir button a:link,
+header .boton-salir button a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
 .header-actions {
     display: flex;
     align-items: center;

@@ -1,42 +1,48 @@
-// 1. Esperamos a que el HTML cargue totalmente
+// Esperamos a que el contenido HTML esté cargado antes de leer elementos.
 document.addEventListener('DOMContentLoaded', () => {
-
-    // 2. Seleccionamos los botones por su ID (los que tú creaste)
+    // Guardamos el botón que abre la pestaña de lista.
     const btnLista = document.getElementById('tab-lista');
+    // Guardamos el botón que abre la pestaña de registro.
     const btnRegistro = document.getElementById('tab-registro');
-    const btnNuevoTop = document.querySelector('.nueva-orden'); // El botón dorado de arriba
+    // Guardamos el botón superior de acción rápida (si existe).
+    const btnNuevoTop = document.querySelector('.nueva-orden');
 
-    // 3. Seleccionamos las secciones de contenido
+    // Guardamos la sección de listado de clientes.
     const sectionLista = document.getElementById('section-lista');
+    // Guardamos la sección de registro de clientes.
     const sectionRegistro = document.getElementById('section-registro');
 
-    // 4. Función para cambiar de pestaña
+    // Esta función cambia visualmente entre lista y registro.
     function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
-        // Usamos clases en lugar de inline styles por consistency
+        // Ocultamos la sección anterior.
         seccionAOcultar.classList.remove('active');
+        // Mostramos la sección seleccionada.
         seccionAMostrar.classList.add('active');
 
-        // Cambiamos la apariencia de los botones
+        // Marcamos el botón activo.
         botonActivo.classList.add('active');
+        // Quitamos estado activo del botón inactivo.
         botonInactivo.classList.remove('active');
     }
 
-    // 5. Escuchamos los clics en los botones
+    // Si todos los elementos existen, configuramos eventos de tabs.
     if (btnLista && btnRegistro && sectionLista && sectionRegistro) {
+        // Al hacer clic en lista, mostramos la sección lista.
         btnLista.addEventListener('click', () => {
             cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
         });
 
+        // Al hacer clic en registro, mostramos la sección registro.
         btnRegistro.addEventListener('click', () => {
             cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
         });
     }
 
-    // Bonus: El botón dorado "+ NUEVO CLIENTE" también debe llevar al registro
-    if(btnNuevoTop) {
+    // Si existe el botón superior, también lo usamos para abrir registro.
+    if (btnNuevoTop && btnLista && btnRegistro && sectionLista && sectionRegistro) {
+        // Al hacer clic en el botón superior, abrimos la pestaña de registro.
         btnNuevoTop.addEventListener('click', () => {
             cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
         });
     }
-
 });
