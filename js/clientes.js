@@ -1,56 +1,82 @@
-// 1. Esperamos a que el HTML cargue totalmente
-document.addEventListener('DOMContentLoaded', () => {
+// Esperamos a que el HTML cargue completo.
+document.addEventListener('DOMContentLoaded', function () {
 
-    // 2. Seleccionamos los botones por su ID (los que tú creaste)
-    const btnLista = document.getElementById('tab-lista');
-    const btnRegistro = document.getElementById('tab-registro');
-    const btnNuevoTop = document.querySelector('.nueva-orden'); // El botón dorado de arriba
+    // Botón de la pestaña Lista.
+    var btnLista = document.getElementById('tab-lista');
 
-    // 3. Seleccionamos las secciones de contenido
-    const sectionLista = document.getElementById('section-lista');
-    const sectionRegistro = document.getElementById('section-registro');
+    // Botón de la pestaña Registro.
+    var btnRegistro = document.getElementById('tab-registro');
 
-    // 4. Función para cambiar de pestaña
+    // Botón dorado de arriba.
+    var btnNuevoTop = document.querySelector('.nueva-orden');
+
+    // Sección de la pestaña Lista.
+    var sectionLista = document.getElementById('section-lista');
+
+    // Sección de la pestaña Registro.
+    var sectionRegistro = document.getElementById('section-registro');
+
+    // Función para cambiar entre pestañas.
     function cambiarTab(seccionAMostrar, seccionAOcultar, botonActivo, botonInactivo) {
-        // Usamos clases en lugar de inline styles por consistency
+        // Ocultamos la sección anterior.
         seccionAOcultar.classList.remove('active');
+
+        // Mostramos la nueva sección.
         seccionAMostrar.classList.add('active');
 
-        // Cambiamos la apariencia de los botones
+        // Marcamos el botón activo.
         botonActivo.classList.add('active');
+
+        // Quitamos marca del botón inactivo.
         botonInactivo.classList.remove('active');
     }
 
-    // 5. Escuchamos los clics en los botones
-    btnLista.addEventListener('click', () => {
-        cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
-    });
+    // Si existen botones y secciones, agregamos eventos.
+    if (btnLista && btnRegistro && sectionLista && sectionRegistro) {
+        // Al hacer click en Lista, mostramos Lista.
+        btnLista.addEventListener('click', function () {
+            cambiarTab(sectionLista, sectionRegistro, btnLista, btnRegistro);
+        });
 
-    btnRegistro.addEventListener('click', () => {
-        cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
-    });
-
-    // Bonus: El botón dorado "+ NUEVO CLIENTE" también debe llevar al registro
-    if(btnNuevoTop) {
-        btnNuevoTop.addEventListener('click', () => {
+        // Al hacer click en Registro, mostramos Registro.
+        btnRegistro.addEventListener('click', function () {
             cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
         });
+
+        // Si existe el botón dorado, también abre Registro.
+        if (btnNuevoTop) {
+            btnNuevoTop.addEventListener('click', function () {
+                cambiarTab(sectionRegistro, sectionLista, btnRegistro, btnLista);
+            });
+        }
     }
 
-    // 6. Marca el enlace activo de navegación según URL
+    // Función que marca el link activo del menú superior.
     function markActiveNavLink() {
-        const menuLinks = document.querySelectorAll('header nav ul li a');
-        const currentPath = window.location.pathname.split('/').pop();
+        // Tomamos todos los links del menú.
+        var menuLinks = document.querySelectorAll('header nav ul li a');
 
-        menuLinks.forEach(link => {
-            const href = link.getAttribute('href');
+        // Tomamos el archivo actual de la URL.
+        var currentPath = window.location.pathname.split('/').pop();
+
+        // Recorremos cada link.
+        for (var i = 0; i < menuLinks.length; i++) {
+            // Link actual.
+            var link = menuLinks[i];
+
+            // Valor href del link actual.
+            var href = link.getAttribute('href');
+
+            // Si coincide, lo marcamos como activo.
             if (href === currentPath || (href === 'index.html' && currentPath === '')) {
                 link.classList.add('active-link');
             } else {
+                // Si no coincide, quitamos activo.
                 link.classList.remove('active-link');
             }
-        });
+        }
     }
 
+    // Ejecutamos la función de menú activo.
     markActiveNavLink();
 });
